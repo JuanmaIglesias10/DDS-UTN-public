@@ -1,0 +1,25 @@
+@startuml
+
+class Materia {
+    - List<Materia> correlativas;
+}
+
+class Alumno {
+    - List<Materia> materiasAprobadas;
+--
+    +boolean puedeCursar
+}
+
+class Inscripcion {
+    - Alumno alumnoAInscribir;
+    - List<Materia> materiasAInscribir;
+
+    + boolean estaAprobada()
+}
+
+Inscripcion --> Alumno
+Inscripcion -->"*" Materia
+Materia -->"*" Materia
+Alumno -->"*" Materia
+
+@enduml
