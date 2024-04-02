@@ -20,7 +20,7 @@ public class testInscripcion {
 
         analisisDeSistemas.agregarCorrelativas(algoritmos);
         paradigmas.agregarCorrelativas(algoritmos);
-        disenio.agregarCorrelativas(analisisDeSistemas,disenio);
+        disenio.agregarCorrelativas(analisisDeSistemas,paradigmas);
     }
 
     @Test
@@ -33,5 +33,17 @@ public class testInscripcion {
         nuevaInscripcion.inscribirse(paradigmas,analisisDeSistemas);
 
         Assertions.assertTrue(nuevaInscripcion.aprobada());
+    }
+
+    @Test
+    @DisplayName("La inscripcion no fue satisfactoria porque no cumple las correlativas!")
+    public void inscripcionNoAceptadaTest() {
+        juanma.agregarMateriasAprobadas(algoritmos,analisisDeSistemas);
+
+        Inscripcion nuevaInscripcion = new Inscripcion();
+        nuevaInscripcion.setAlumnoAInscribir(juanma);
+        nuevaInscripcion.inscribirse(disenio);
+
+        Assertions.assertFalse(nuevaInscripcion.aprobada());
     }
 }
