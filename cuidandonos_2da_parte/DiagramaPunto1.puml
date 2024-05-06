@@ -30,6 +30,7 @@ class Persona {
     -FormasDeReaccion           : List<FormasDeReaccion>
 
     +cambiarReaccion(reaccion)
+    +viajar(Direccion posicionActual, Direccion destino, List<Cuidador> cuidadores)
 }
 
 class Direccion {
@@ -102,6 +103,33 @@ class CalculadoraDeTiempoDeDemora{
     +calcularTiempoDeDemoraAproximadoEnMinutos(CalculadoraDeDistancia calculadoraDeDistancia, Destino destinoInicial, Destino destinoFinal): Integer
 }
 
+interface AdapterDistancia{
+    +calcularDistanciaEnKMEntre(Direccion destinoInicial, Direccion destinoFinal): Double
+}
+
+class CalculadoraDeDistancia{
+    -adapterDistancia: AdapterDistancia
+    +calcularDistanciaEnKMEntre(Direccion destinoInicial, Direccion destinoFinal): Double
+}
+
+class AdapterDistanceMatrixAPI{
+    -distanceMatrixAPI: DistanceMatrixAPI
+    +calcularDistanciaEnKMEntre(Direccion destinoInicial, Direccion destinoFinal): Double
+}
+
+class DistanceMatrixAPI{
+    +calcularDistanciaEnKMEntre(Direccion destinoInicial, Direccion destinoFinal): Double
+}
+
+
+CalculadoraDeDistancia *-- AdapterDistancia
+AdapterDistancia <|.. AdapterDistanceMatrixAPI
+AdapterDistanceMatrixAPI *-- DistanceMatrixAPI
+
+
+CalculadoraDeTiempoDeDemora ..> Direccion
+CalculadoraDeTiempoDeDemora ..> CalculadoraDeDistancia
+
 @enduml
 
 
@@ -115,30 +143,3 @@ class Transeunte {
 }
 
 
-interface AdapterDistancia{
-    +calcularDistanciaEnKMEntre(Destino destinoInicial, Destino destinoFinal): Double
-}
-
-class CalculadoraDeDistancia{
-    -adapterDistancia: AdapterDistancia
-    +calcularDistanciaEnKMEntre(Destino destinoInicial, Destino destinoFinal): Double
-}
-
-class AdapterDistanceMatrixAPI{
-    -distanceMatrixAPI: DistanceMatrixAPI
-    +calcularDistanciaEnKMEntre(Destino destinoInicial, Destino destinoFinal): Double
-}
-
-class DistanceMatrixAPI{
-    +calcularDistanciaEnKMEntre(Destino destinoInicial, Destino destinoFinal): Double
-}
-
-
-CalculadoraDeDistancia *-- AdapterDistancia
-AdapterDistancia <|.. AdapterDistanceMatrixAPI
-AdapterDistancia ..> Destino
-AdapterDistanceMatrixAPI *-- DistanceMatrixAPI
-
-
-CalculadoraDeTiempoDeDemora ..> Direccion
-CalculadoraDeTiempoDeDemora ..> CalculadoraDeDistancia
