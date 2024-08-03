@@ -1,0 +1,71 @@
+@startuml DCL
+
+Usuario  *-- "*" Chat
+Chat *-- "*" Mensaje
+Mensaje --> Usuario
+Grupo o-- "*" Usuario
+Usuario *-- "*" Bot
+Bot ..> Mensaje
+Usuario *-- "*" Grupo
+Bot o-- "*" Chat
+Bot *-- "*" Comando
+Chat *-- "*" Usuario
+
+class Usuario {
+    - historialChats : List<Chat>
+    - grupos : List<Grupo>
+    - botsCreados : List<Bot>
+
+    + enviarMensaje(Chat chat , Mensaje Mensaje)
+    + recibirMensaje(Chat chat , Mensaje Mensaje)
+
+    + crearGrupo(String nombre, String descripcion) : Grupo
+    + eliminarGrupo(Grupo grupo) : void
+    + agregarIntegrantes(List<Usuario>, Grupo grupo) : void
+    + eliminarIntegrante(Grupo grupo, Usuario usuario) : void
+    + agregarAdministradores(List<Usuario>, Grupo grupo) : void
+    + quitarAdministradores(List<Usuario>, Grupo grupo) : void
+    + cambiarNombreGrupo(String nuevoNombre, Grupo grupo) : void
+
+    + crearBot(String nombre) : Bot
+
+}
+
+class Bot {
+    - nombre : String
+    - chatsPertenecientes : List<Chat>
+    - comandosPredefinidos : List<Comando>
+    + recibirMensaje(Mensaje Mensaje) : void
+    + descifrarComando(String contenidoMensaje) : void 
+    + responderMensaje(String respuesta) : void
+}
+
+class Comando {
+    - funcionComando : String
+    - acciones : List<String>
+    + personalizarAcciones(List<String> acciones) : void
+}
+
+class Chat {
+    - Participantes : List<Usuario>
+    - mensajes : List<Mensaje>
+}
+
+class Mensaje {
+    - contenido : String
+    - fechaEnvio : LocalDateTime
+    - archivosAdjuntos : List<String>
+    - emisor : Usuario
+    - receptor : Usuario 
+    - fechaRecibido : LocalDateTime
+    - fechaLeido : LocalDateTime
+}
+
+class Grupo {
+    - nombre: String
+    - descripcion : String
+    - integrantes: List<Usuario>
+    - administradores : List<Usuario>
+    - chatGrupal : Chat
+}
+@enduml
