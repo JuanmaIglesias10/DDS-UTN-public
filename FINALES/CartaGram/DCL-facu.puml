@@ -1,0 +1,66 @@
+@startuml DCL
+
+Usuario  *-- "*" Mensaje
+Usuario *-- "*" Bot
+Usuario *-- "*" Chat
+Chat *-- "*" Mensaje
+Grupo o-- "*" Usuario
+Bot ..> Mensaje
+
+class Usuario {
+    - nombre : string
+    - chats : <Chat>
+    - grupos : List<Grupo>
+    - botsCreados : <Bot>
+
+    + crearGrupo(string nombre, String descripcion) : Grupo
+    + enviarMensaje(Mensaje Mensaje, Chat chat) : void
+    + recibirMensaje(Mensaje Mensaje, Chat chat) : void
+    + crearBot(string nombre) : Bot
+    + setearComandos(List<String> acciones, Bot bot) : void
+}
+
+class Administrador extends Usuario {
+    + cambiarNombreGrupo(String nuevoNombre, Grupo grupo) : void
+    + agregarAdministradores(List<Usuario>, Grupo grupo) : void
+    + quitarAdministradores(List<Usuario>, Grupo grupo) : void
+    + agregarIntegrantes(List<Usuario>, Grupo grupo) : void
+    + eliminarIntegrante(Grupo grupo, Usuario usuario) :void
+    + eliminarGrupo(Grupo grupo) : void
+}
+
+class Mensaje {
+    - contenido : String
+    - fechaEnvio : LocalDateTime
+    - archivosAdjuntos : List<Archivo>
+    - emisor : Usuario
+    - receptor : Usuario
+    - fueRecibido : Boolean
+    - fueLeido : Boolean
+    - receptorGrupo : Grupo
+}
+
+class Chat {
+    - participantes : List<Usuario>
+    - mensajes : List<Mensaje>
+}
+
+class Grupo {
+    - nombre: String
+    - descripcion : String
+    - integrantes: List<Usuario>
+    - administradores : List<Usuario>
+}
+
+class Bot {
+    - nombre : String
+    - chats : List<Chat>
+    - accionesPermitidas : List<String>
+
+    + recibirMensaje(Mensaje Mensaje) : void
+    + descifrarComando(String contenidoMensaje) :void
+    + responderMensaje(String respuesta) : void
+}
+
+@enduml
+

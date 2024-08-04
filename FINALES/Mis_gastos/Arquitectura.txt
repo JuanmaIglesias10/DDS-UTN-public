@@ -1,0 +1,17 @@
+1.
+Seguridad y Usabilidad. 
+Seguridad: Lo seleccionaria porque al tratarse de un sistema de finanzas, maneja datos e informacion que incluyen dinero
+           y no tiene que haber lugar a ningun tipo de vulnerabilidad de datos para los usuarios.
+Usabilidad: El sistema tiene que ser ''usable'' por cualquier persona, sea del rubro que sea, por lo tanto si incluye
+            demasiadas palabras tecnicas del mundo de las finanzas tal vez puede ser confuso para los usuarios que no
+            esten involucrados en esa area.
+
+2.
+Implementaria una ejecucion asincronica con un Cron Task, que ejecute las clase involucrada en los calculos particulares de cada resumen estadistico
+en los lapsos de tiempo que aclara el enunciado (diario, semanal, mensual y anual).
+
+3. 
+Para minimizar los gastos mensuales, habria que implementar un mecanismo de tipo push based. Utilizando este mecanismo,
+nos ahorramos generar solicitudes de mas consultando el estado de la peticion (mecanismo pull based). Lo que logramos con este 
+mecanismo, es que la API donde nos queremos integrar, nos comunicara inmediatamente cuando el resultado de la solicitud este
+disponible y tan solo utilizariamos una peticion (para pedirle lo que necesitemos).

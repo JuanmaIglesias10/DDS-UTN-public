@@ -12,6 +12,7 @@ Bot *-- "*" Comando
 Chat *-- "*" Usuario
 
 class Usuario {
+    - nombre : String
     - historialChats : List<Chat>
     - grupos : List<Grupo>
     - botsCreados : List<Bot>

@@ -1,0 +1,152 @@
+@startuml mis_gastos
+
+Usuario *-- Contacto
+Usuario *-- "*" Presupuesto
+Usuario *-- "*" Gasto
+Usuario *-- "*" Comercio
+Usuario *-- "*" AlertaConsumo
+Usuario *-- "*" AlertaPresupuesto
+Usuario --> Categoria
+
+Gasto --> Categoria
+Gasto --> Comercio
+
+Comercio --> Ubicacion
+Comercio --> Categoria
+
+Categoria o-- Categoria
+
+Categorizar ..> Gasto
+
+Presupuesto --> Categoria
+
+Alerta ..> Usuario
+
+AlertaConsumo ..|> Alerta
+AlertaConsumo --> "*" Categoria
+
+AlertaPresupuesto ..|> Alerta
+
+RegistrarGasto ..> Gasto
+RegistrarGasto ..> Usuario
+
+class Usuario {
+    - nombre : String
+    - apellido : String
+    - mediosDeContacto : Contacto
+    - fechaNacimiento : LocalDate
+    - presupuestos : List<Presupuesto>
+    - gastos : List<Gastos>
+    - comercios : List<Comercio>
+    - alertasConsumo : List<AlertaConsumo>
+    - alertaPresupuesto : List<AlertaPresupuesto>
+    - estado : Estado
+    - fondo : Double
+    - ingresos : List<Ingreso>
+    
+}
+
+class Contacto {
+    - email : String
+    - nroTelefonico : String
+}
+ 
+class Gasto {
+    - fecha : LocalDate
+    - hora : LocalDateTime
+    - monto : Double
+    - descripcion : String
+    - categoria : Categoria
+    - comercio : Comercio
+    - Fuente : String
+    + calcularCategoria() : void   
+}
+
+class Comercio {
+    - nombre : String
+    - ubicacion : Ubicacion
+    - categoria : Categoria
+}
+
+class Ubicacion {
+    - pais : String
+    - provincia : String
+    - ciudad : String
+    - direccion : String
+}
+
+class Categoria {
+    - nombre : String
+    - categoriaPadre : Categoria
+}
+
+class Categorizar {
+    - categorizador : Categorizador
+    + ejecutarCategorizacion(Gasto gasto) : void
+}
+
+interface Categorizador {
+    + categorizar(Gasto gasto) : void
+}
+
+class AdapterConcretoCategorizador {
+    - adapter : CategorizadorAdaptado
+    + categorizar(Gasto gasto) : void
+}
+
+class CategorizadorAdaptado {
+    + categorizar(Gasto gasto) : void
+}
+
+AdapterConcretoCategorizador  --> CategorizadorAdaptado
+AdapterConcretoCategorizador .up.|> Categorizador
+Categorizar --> Categorizador
+
+
+interface Registrador {
+    + registrarGastoTerceros(Gasto gasto, Usuario usuario) : void
+}
+
+AdapterConcretoRegistrador  --> RegistradorAdaptado
+AdapterConcretoRegistrador .up.|> Registrador
+RegistrarGasto --> Registrador
+
+class Presupuesto {
+    - categoria : Categoria
+    - topeMaximo : Double
+    - gastoAcumulado : Double
+    - Anio : Integer
+    - Mes : Integer
+}
+
+interface Alerta {
+    + alertar(Usuario usuario) : void
+}
+
+class AlertaConsumo {
+    - nombre : String
+    - categorias : List<Categoria>
+    - umbralEsperado : Double
+    - periodoDeTiempo : Int
+    - fechaAlerta : LocalDateTime
+
+    + alertar(Usuario usuario) : void
+} 
+
+class AlertaPresupuesto {
+    - nombre : String
+    - presupuestoAAlertar : Presupuesto
+    - fechaAlerta : LocalDateTime
+    
+    + alertar(Usuario usuario) : void
+}
+
+class Ingreso {
+    - fecha : LocalDate
+    - monto : double
+    - descripcion : String
+}
+
+@enduml
+
+TODO: aplicar el state para los Usuarios y Resumen Estadistico.
