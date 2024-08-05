@@ -1,0 +1,167 @@
+@startuml dcl
+
+Catalogo *-- "*" Dispositivo
+
+Dispositivo *-- Categoria
+Dispositivo *-- NumeroDeSerie
+
+Cliente *-- "*" MedioDeContacto
+Cliente *-- "*" SolicitudDeAlquiler
+
+SolicitudDeAlquiler o-- Catalogo
+SolicitudDeAlquiler o-- "*" Categoria
+SolicitudDeAlquiler o-- Ubicacion
+SolicitudDeAlquiler *-- Entrega
+
+OrdenDeAlquiler *-- SolicitudDeAlquiler
+OrdenDeAlquiler --> Estado
+OrdenDeAlquiler o-- Cliente
+
+Entrega --> TipoEntrega
+
+Notificador ..> OrdenDeAlquiler
+Notificador ..> Cliente
+
+MedioDeContacto --> TipoDeContacto
+
+class Catalogo {
+    - dispositivos : List<Dispositivos>
+}
+
+class Dispositivo {
+    - marca : String
+    - modelo : String
+    - categoria : Categoria 
+    - peso : Double
+    - precioAlquiler : Double
+    enviarPosicion(Posicion posicionActual)
+}
+
+class DispositivoParticular {
+    - numeroDeSerie : NumeroDeSerie
+    - dispositivo : Dispositivo
+    - fechaDeAlta : LocalDate
+    - estaActivo : Boolean
+    - posicionActual : Posicion
+    - rango : Integer
+    - posicionEnAlertar : Posicion
+}
+
+class NumeroDeSerie {
+    - numeroDeSerie : String
+}
+
+class Categoria {
+    - nombre : String
+}
+
+class Cliente {
+    - nombre : String
+    - apellido : String
+    - cuit : Integer
+    - condicionAnteIVA : CondicionesIVA
+    - mediosDeContacto : List<MedioDeContacto>
+    - solicitudes : List<SolicitudDeAlquiler>
+}
+
+enum CondicionesIVA {
+    RESPONSABLE_INSCRIPTO
+    MONOTRIBUTO
+    EXENTO
+}
+
+class SolicitudDeAlquiler {
+    - catalogo : Catalogo
+    - categoriasSolicitadas : List<Categoria>
+    - cantidad : Integer
+    - fechaInicio : LocalDate
+    - fechaFin : LocalDate
+    - lugarDeUso : Ubicacion
+    - modoEntrega : Entrega
+}
+
+class OrdenDeAlquiler {
+    - solicitudAsociada : SolicitudDeAlquiler
+    - estado : Estado
+    - cliente : Cliente
+}
+
+interface Notificador {
+    + notificar(Cliente cliente, OrdenDeAlquiler orden) : void
+}
+
+class AdapterConcretoSms {
+    - smsAdapter : SmsAdapter
+    + notificar(Cliente cliente, OrdenDeAlquiler orden) : void
+}
+
+class AdapterConcretoWhatsapp {
+    - whatsappAdapter : WhatsappAdapter
+    + notificar(Cliente cliente, OrdenDeAlquiler orden) : void
+}
+
+class AdapterConcretoEmail {
+    - emailAdapter : EmailAdapter
+    + notificar(Cliente cliente, OrdenDeAlquiler orden) : void
+}
+
+class WhatsappAdapter {
+    + notificar(Cliente cliente, OrdenDeAlquiler orden) : void
+}
+
+class SmsAdapter {
+    + notificar(Cliente cliente, OrdenDeAlquiler orden) : void
+}
+
+class EmailAdapter {
+    + notificar(Cliente cliente, OrdenDeAlquiler orden) : void
+}
+
+AdapterConcretoWhatsapp ..|> Notificador
+AdapterConcretoWhatsapp -up-> WhatsappAdapter
+AdapterConcretoSms ..|> Notificador
+AdapterConcretoSms -up-> SmsAdapter
+AdapterConcretoEmail ..|> Notificador
+AdapterConcretoEmail -up-> EmailAdapter
+
+enum Estado {
+    PENDIENTE
+    GENERADA
+    LISTA_PARA_RETIRAR
+    ENTREGADA
+    DEVUELTA
+}
+
+class Entrega {
+    - tipoEntrega : TipoEntrega
+    - ubicacion : Ubicacion
+}
+
+enum TipoEntrega {
+    RETIRO
+    ENVIO
+}
+
+class Ubicacion {
+    provincia : String
+    localidad : String
+    Direccion : String
+}
+
+class MedioDeContacto {
+    - tipo : TipoDeContacto
+    - valor : String
+}
+
+enum TipoDeContacto {
+    TELEFONO
+    CORREO_ELECTRONICO
+    WHATSAPP
+}
+
+class Posicion {
+    latitud : Integer
+    longitud : Integer
+}
+
+@enduml

@@ -1,0 +1,112 @@
+@startuml dcl
+
+Notificador ..> Participante
+Participante *-- "*" Referido
+Participante *-- "*" MedioDeContacto
+Referido o-- Participante
+MedioDeContacto --> TipoDeContacto
+
+class Participante {
+    - nombre : String
+    - apellido : String
+    - edad : Int
+    - mediosDeContactoPreferidos : List<MedioDeContacto>
+    - esMiembroUDDS : Boolean
+    - referidos : List<Referido>
+    - categoria : Categoria
+
+    + invitar(Referido referido) : void
+    + cambiarCategoria(Categoria categoria) : void
+    + calcularChances() : Double
+    + calcularProbabilidadDeGanar() : Double
+}
+
+class Referido {
+    - referidoPor : Participante
+    - mail : String
+    - dni : Integer
+    - fechaInvitacion : LocalDateTime
+    - aceptoSolicitud : Boolean
+    - fechaAceptacion : LocalDateTime
+}
+
+class MedioDeContacto {
+    - tipo : TipoDeContacto
+    - valor : String
+}
+
+enum TipoDeContacto {
+    MAIL
+    WHATSAPP
+    SMS
+}
+
+class Categoria {
+    - nombre : String
+    - chanceQueOtorga : Integer
+    - costo : Double
+    - cantidadDeReferidos : Integer
+    + aplicarChancePorCategoria(Participante participante)
+}
+
+Categoria ..> Participante 
+
+interface HistorialAcademicoParticipante {
+    obtenerInformacionAcademica(Participante participante) : String
+}
+ 
+class AdapterConcretoSuaDino {
+    - adaptado : SuaDinoAdapter
+    obtenerInformacionAcademica(Participante participante) : String
+}
+
+class SuaDinoAdapter {
+    obtenerInformacionAcademica(Participante participante) : String
+}
+
+HistorialAcademicoParticipante ..> Participante
+AdapterConcretoSuaDino ..|> HistorialAcademicoParticipante
+AdapterConcretoSuaDino --> SuaDinoAdapter
+
+interface Notificador {
+    + notificar(Participante participante, String mensaje) : void
+}
+
+class AdapterConcretoSms {
+    - smsAdapter : SmsAdapter
+    + notificar(Participante participante, String mensaje) : void
+}
+
+class AdapterConcretoWhatsapp {
+    - whatsappAdapter : WhatsappAdapter
+    + notificar(Participante participante, String mensaje) : void
+}
+
+class AdapterConcretoEmail {
+    - emailAdapter : EmailAdapter
+    + notificar(Participante participante, String mensaje) : void
+}
+
+class WhatsappAdapter {
+    + notificar(Participante participante, String mensaje) : void
+}
+
+class SmsAdapter {
+    + notificar(Participante participante, String mensaje) : void
+}
+
+class EmailAdapter {
+    + notificar(Participante participante, String mensaje) : void
+}
+
+AdapterConcretoWhatsapp ..|> Notificador
+AdapterConcretoWhatsapp -up-> WhatsappAdapter
+AdapterConcretoSms ..|> Notificador
+AdapterConcretoSms -up-> SmsAdapter
+AdapterConcretoEmail ..|> Notificador
+AdapterConcretoEmail -up-> EmailAdapter
+@enduml
+
+Implementar una calculadora para las probabilidades o
+la logica la ponemos en participante? Hay que usar la interface
+HistorialAcademicoParticipante.  

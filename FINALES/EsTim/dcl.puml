@@ -1,0 +1,143 @@
+@startuml dcl
+
+class CreadorJuego {
+    string : Nombre
+}
+
+class Jugador {
+    - nickname : String
+    - id : Integer
+    - mai : String
+    - amigos : List<Jugador>
+    - mediosDePago : List<MedioDePago>
+    - compras : List<Compra>
+    - juegosBase : List<JuegoBase>
+    - dlcs : List<DLC>
+    - esSospechoso : Boolean
+}
+ 
+Jugador *-- "*" Jugador
+Jugador --> "*" MedioDePago
+Jugador *-- "*" Compra
+Jugador o-- "*" JuegoBase
+Jugador o-- "*" DLC
+
+enum MedioDePago {
+    DEBITO
+    CREDITO
+    EFECTIVO
+    TRANSFERENCIA
+}
+
+class JuegoBase {
+    - creador : CreadorJuego
+    - nombre : String
+    - requerimientos : String
+    - genero : Genero 
+    - precioActual : Precio
+}
+
+JuegoBase o-- CreadorJuego
+JuegoBase o-- Genero
+JuegoBase *-- Precio
+
+class DLC {
+    - creador : CreadorJuego
+    - nombre : String
+    - juego : JuegoBase
+    - precio : Precio
+} 
+
+DLC o-- CreadorJuego
+DLC o-- JuegoBase
+DLC *-- Precio
+
+class Precio {
+    - valor : Double 
+    - fecha : LocalDate
+}
+
+class Genero {
+    - nombre : String
+    - caracteristicas : List<Atributo>
+}
+
+Genero o-- "*" Atributo
+
+class Atributo {
+    - nombre : String
+    - esObligatorio : Boolean
+}
+
+class AtributoContestado {
+    - atributo : Atributo
+    - respuesta : String
+}
+
+AtributoContestado o-- Atributo
+
+class Compra {
+    - comprador : Jugador
+    - juego : JuegoBase
+    - dlc : DLC
+    - precioDeCompra : Precio
+    - medioDePago : MedioDePago
+}
+
+Compra o-- Jugador
+Compra o-- JuegoBase
+Compra o-- DLC
+Compra o-- Precio
+Compra --> MedioDePago
+
+
+class Prestamo {
+    - duenio : Jugador
+    - solicitante : Jugador
+    - juego : JuegoBase
+    - dlc : DLC
+    - fechaPrestamo : LocalDate
+    - fechaLimite : LocalDate
+    - fueDevuelvo : Boolean
+}
+
+Prestamo o-- Jugador
+Prestamo o-- JuegoBase
+Prestamo o-- DLC
+
+class MecanismoFraude {
+    - algoritmoFraude : AlgoritmoDeteccion
+    - acciones : List<AccionSobreFraude>
+
+    + setearAlgoritmo(AlgoritmoDeteccion algoritmo)
+    + ejecutarChequeo(Jugador jugador) : void
+    + ejecutarAcciones(Jugador jugador) : void
+}
+
+MecanismoFraude --> AlgoritmoDeteccion
+MecanismoFraude --> "*" AccionSobreFraude
+MecanismoFraude ..> Jugador
+
+interface AccionSobreFraude {
+    + accionarSobreJugador(Jugador jugador) : void
+}
+
+interface AlgoritmoDeteccion {
+    + chequear(Jugador jugador) : Boolean
+}
+
+class MasDe10Prestamos implements AlgoritmoDeteccion {
+    + chequear(Jugador jugador) : Boolean
+}
+
+class MasDe400Prestamos implements AlgoritmoDeteccion {
+    + chequear(Jugador jugador) : Boolean
+}
+
+class PrestamoMasDe2Anios implements AlgoritmoDeteccion {
+    + chequear(Jugador jugador) : Boolean
+}
+
+MecanismoFraude --> AlgoritmoDeteccion
+ 
+@enduml 
