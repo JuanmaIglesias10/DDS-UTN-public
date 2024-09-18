@@ -12,9 +12,17 @@ Entity Pedido {
 * cobro: FLOAT
 * id_repartidor: INTEGER(11) <<FK>>
 * tiempo_estimado_entrega: INTEGER(11)
-* estado : VARCHAR(255)
+* id_estado : INTEGER(11) <<FK>>
 * fecha_hora_entrega: DATETIME
 }
+
+Entity Estado {
+* id: INTEGER(11) <<subrogada>>
+--
+* nombre : VARCHAR(255)
+}
+
+Pedido }|--|| Estado
 
 Entity ProductoXPedido {
 * id_producto: INTEGER(11) <<PK,FK>>
@@ -62,7 +70,6 @@ Entity Repartidor {
 
 Pedido }|--|| Repartidor
 
-Producto }|--|| Pedido 
 Producto }|--|| Restaurante
 
 Entity Categoria {
@@ -123,3 +130,15 @@ Restaurante }|--|| Zona
 Repartidor }|--|| Zona
 
 @enduml
+
+Decisiones significativas:
+
+- Rompemos la relacion muchos a muchos entre el Pedido y el Producto,
+ya que hay información que no pertenece a ninguna de las dos entidades -> Entidad intermedia ProductoXPedido
+
+- Además de Dirección, modelamos Ciudad y Provincia por consistencia de datos
+
+- Estados de pedido?
+- MediosDePago?
+
+
