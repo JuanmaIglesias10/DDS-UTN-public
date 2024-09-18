@@ -1,0 +1,125 @@
+@startuml der
+
+Entity Pedido {
+* id: INTEGER(11) <<subrogada>>
+--
+* id_cliente: INTEGER(11) <<FK>>
+* id_restaurante: INTEGER(11) <<FK>>
+* id_medio_de_pago: INTEGER(11) <<FK>>
+* id_direccion: INTEGER(11) <<FK>>
+* propina: INTEGER(11)
+* fecha_hora: DATETIME
+* cobro: FLOAT
+* id_repartidor: INTEGER(11) <<FK>>
+* tiempo_estimado_entrega: INTEGER(11)
+* estado : VARCHAR(255)
+* fecha_hora_entrega: DATETIME
+}
+
+Entity ProductoXPedido {
+* id_producto: INTEGER(11) <<PK,FK>>
+* id_pedido: INTEGER(11) <<PK,FK>>
+--
+* cantidad : INTEGER(11)
+* observacion: VARCHAR(255)
+}
+
+Entity Producto {
+* id: INTEGER(11) <<subrogada>>
+--
+* nombre: VARCHAR(255)
+* id_categoria: INTEGER(11) <<FK>>
+* precio: FLOAT
+* imagen: VARCHAR(255)
+* descripcion: VARCHAR(255)
+* tiempo_preparacion: INTEGER(11)
+}
+
+Entity Cliente {
+* id: INTEGER(11) <<subrogada>>
+--
+* nombre: VARCHAR(255)
+}
+
+Pedido }|--|| Cliente
+
+Entity Restaurante {
+* id: INTEGER(11) <<subrogada>>
+--
+* id_producto: INTEGER(11) <<FK>>
+* id_zona: INTEGER(11) <<FK>>
+}
+
+Pedido }|--|| Restaurante
+
+Entity Repartidor {
+* id: INTEGER(11) <<subrogada>>
+--
+* nombre: VARCHAR(255)
+* id_zona : INTEGER(11) <<FK>>
+* estaOcupado: TINYINT(1)
+}
+
+Pedido }|--|| Repartidor
+
+Producto }|--|| Pedido 
+Producto }|--|| Restaurante
+
+Entity Categoria {
+* id: INTEGER(11) <<subrogada>>
+--
+* nombre: VARCHAR(255)
+}
+
+Producto }|--|| Categoria
+
+ProductoXPedido }|--|| Pedido
+ProductoXPedido }|--|| Producto
+
+Entity MedioDePago {
+* id: INTEGER(11) <<subrogada>>
+--
+* nombre: VARCHAR(255)
+}
+
+Pedido }|--|| MedioDePago
+
+Entity Direccion {
+ * id: INTEGER(11) <<subrogada>>
+ --
+ * ciudad_id: INTEGER(11) <<FK>>
+ * calle: VARCHAR(255)
+ * altura: VARCHAR(255)
+   piso: VARCHAR(255)
+ * codigoPostal: VARCHAR(255)
+}
+
+Pedido }|--|| Direccion
+
+entity Ciudad {
+ * id: INTEGER(11) <<subrogada>>
+ --
+ * provincia_id: INTEGER(11) <<FK>>
+ * nombre: VARCHAR(255)
+}
+
+Direccion }|--|| Ciudad
+
+entity Provincia {
+ * id: INTEGER(11) <<subrogada>>
+ --
+ * nombre: VARCHAR(255)    
+}
+
+Ciudad }|--|| Provincia
+
+Entity Zona {
+* id: INTEGER(11) <<subrogada>>
+--
+* nombre: VARCHAR(255) 
+}
+
+Restaurante }|--|| Zona
+Repartidor }|--|| Zona
+
+@enduml
