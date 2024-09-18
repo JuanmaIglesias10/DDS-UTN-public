@@ -138,7 +138,5 @@ ya que hay información que no pertenece a ninguna de las dos entidades -> Entid
 
 - Además de Dirección, modelamos Ciudad y Provincia por consistencia de datos
 
-- Estados de pedido?
-- MediosDePago?
-
-
+Toda estructura de datos se encuentra en 3FN.
+No hay dependencias funcionales entre atributos no claves (y se satisface 2FN)
